@@ -1,0 +1,22 @@
+{
+  "schema": {
+    "type": "service_blueprint",
+    "version": {
+      "major": 1,
+      "minor": 0
+    },
+    "origin": "Engines Developer Studio 0.2"
+  },
+  "metadata": {
+    "blueprint": {
+      "version": {
+        "major": 0,
+        "minor": 0,
+        "level": "alpha",
+        "patch": 0
+      }
+    }
+  },
+  "software": {
+  }
+}
