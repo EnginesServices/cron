@@ -22,7 +22,7 @@
         "label": "cron"
       }
     },
-    "timestamp": "2017-11-16T11:01:35+11:00"
+    "timestamp": "2017-11-16T11:22:21+11:00"
   },
   "software": {
     "base": {
@@ -31,7 +31,7 @@
         "ManagedEngine",
         "ManagedService"
       ],
-      "publisher_namespace": "EnginsSystem",
+      "publisher_namespace": "EnginesSystem",
       "type_path": "cron",
       "service_handle_field": "title",
       "parent_image": "engines/servicebase",
