@@ -15,8 +15,150 @@
         "level": "alpha",
         "patch": 0
       }
-    }
+    },
+    "software": {
+      "display": {
+        "title": "cron",
+        "label": "cron"
+      }
+    },
+    "timestamp": "2017-11-16T11:01:35+11:00"
   },
   "software": {
+    "base": {
+      "name": "cron",
+      "accepts": [
+        "ManagedEngine",
+        "ManagedService"
+      ],
+      "publisher_namespace": "EnginsSystem",
+      "type_path": "cron",
+      "service_handle_field": "title",
+      "parent_image": "engines/servicebase",
+      "run_as_user": "cron",
+      "deployment_type": "worker",
+      "memory": {
+        "required": 92,
+        "recommended": 96
+      }
+    },
+    "scripts": {
+      "start": {
+        "language": "sh",
+        "content": "#!/bin/sh\r\n\r\n\r\nPID_FILE=/home/cron/fcron.pid\r\nexport PID_FILE\r\n. /home/engines/functions/trap.sh\r\n\r\n/home/cron/sbin/fcron -f -p  /home/cron/log/cron.log &\r\n\r\nstartup_complete\r\n\r\nwait \r\nexit_code=$?\r\n\r\nshutdown_complete"
+      },
+      "install": {
+        "language": "sh",
+        "content": "#/bin/bash\r\n\r\n  \tcd /home/service/src/fcron-3.3.0 &&\\\r\n  \t./configure --with-run-non-privileged --with-rootname=cron\\\r\n\t--with-rootgroup=cron --with-username=cron --with-groupname=cron\\\r\n\t--with-piddir=/home/cron\\\r\n\t--with-fifodir=/home/cron --with-spooldir=/home/cron/spool\\\r\n\t--with-docdir=/home/cron/doc --prefix=/home/cron &&\\\r\n\tmake install &&\\\r\n\tmkdir -p /home/cron/doc /home/cron/man /home/cron/spool /home/cron/log/ &&\\\r\n\tchown -R cron /home/cron/ &&\\\r\n\tcd /home/cron &&\\\r\n \t/home/post_build_clean.sh"
+      }
+    },
+    "system_packages": [
+      {
+        "package": "build-essential"
+      },
+      {
+        "package": "gcc"
+      },
+      {
+        "package": "make"
+      }
+    ],
+    "installed_packages": [
+      {
+        "name": "fcron-3.3.0.src.tar.gz",
+        "destination": "src",
+        "extraction_command": "tar -xzpf",
+        "path_to_extracted": "fcron"
+      }
+    ],
+    "template_files": [
+      {
+        "path": "/home/engines/scripts/engine/rebuild_crontab.sh",
+        "language": "sh",
+        "content": "#!/bin/bash\r\n \r\ncat /home/cron/entries/*/* > /home/cron/spool/cron.orig\r\n/home/cron/bin/fcrontab -z"
+      }
+    ],
+    "consumer_params": [
+      {
+        "name": "action_type",
+        "mandatory": true,
+        "immutable": true,
+        "input": {
+          "type": "select",
+          "label": "Action Type",
+          "collection": {
+            "items": {
+              "command": "Run Command",
+              "web": "Get a URL"
+            }
+          }
+        }
+      },
+      {
+        "name": "cron_job",
+        "mandatory": true,
+        "input": {
+          "type": "string",
+          "label": "Cron Job",
+          "hint": "The command or URL"
+        }
+      },
+      {
+        "name": "titlt",
+        "mandatory": true,
+        "immutable": true,
+        "input": {
+          "type": "string",
+          "label": "Title"
+        }
+      },
+      {
+        "name": "when",
+        "mandatory": true,
+        "input": {
+          "type": "string",
+          "title": "Cron when specification",
+          "comment": "(minute) {hr} {day  of month} {month} {day of week}",
+          "hint": "*/15 * * * *"
+        }
+      },
+      {
+        "name": "notication_address",
+        "value": "default",
+        "input": {
+          "type": "email",
+          "comment": "not present or 'default' for default, none for silent, log for log, email address for email "
+        }
+      }
+    ],
+    "actionators": [
+      {
+        "name": "show_crontab",
+        "label": "Show crontab",
+        "return_type": "json",
+        "script": {
+          "content": "#!/bin/bash\r\ncron_list_file=`mktemp`\r\n /home/cron/bin/fcrontab -l | sed \"/*/s//STAR/g\"  > $cron_list_file\r\nfirst=1\r\necho '{\"cron_jobs\":['\r\ncat $cron_list_file | while read LINE\r\ndo\r\nif test $first -eq 1\r\n then\r\n  first=0\r\nelse\r\n echo -n \",\"\r\nfi\r\ncront=`echo \"$LINE\" | cut -f1-5 -d\" \"`\r\ncronl=`echo \"$LINE\" | cut -f6- -d\" \"`\r\ntim=`echo $cront | sed \"/STAR/s//*/g\"`\r\necho '{\"'$cronl'\":\"'\"$tim\"'\"}'\r\n\r\ndone\r\necho ']}'\r\n\r\n\r\nrm $cron_list_file"
+        }
+      }
+    ],
+    "configurators": [
+      {
+        "name": "default_notifcation_address",
+        "label": "Default notificaton address",
+        "enable_logging": true,
+        "variables": [
+          {
+            "name": "notification_address",
+            "mandatory": true,
+            "input": {
+              "type": "email"
+            }
+          }
+        ],
+        "set_script": {
+          "language": "sh"
+        }
+      }
+    ]
   }
 }
