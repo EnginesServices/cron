@@ -2,8 +2,8 @@
   "schema": {
     "type": "service_blueprint",
     "version": {
-      "major": 1,
-      "minor": 0
+      "major": 0,
+      "minor": 1
     },
     "origin": "Engines Developer Studio 0.2"
   },
@@ -22,25 +22,21 @@
         "label": "cron"
       }
     },
-    "timestamp": "2017-11-16T11:22:21+11:00"
+    "timestamp": "2017-12-28T17:07:51+11:00"
   },
   "software": {
     "base": {
       "name": "cron",
-      "accepts": [
-        "ManagedEngine",
-        "ManagedService"
-      ],
       "publisher_namespace": "EnginesSystem",
       "type_path": "cron",
       "service_handle_field": "title",
       "parent_image": "engines/servicebase",
-      "run_as_user": "cron",
       "deployment_type": "worker",
       "memory": {
         "required": 92,
         "recommended": 96
-      }
+      },
+      "run_as_user": "cron"
     },
     "scripts": {
       "start": {
@@ -78,6 +74,12 @@
         "content": "#!/bin/bash\r\n \r\ncat /home/cron/entries/*/* > /home/cron/spool/cron.orig\r\n/home/cron/bin/fcrontab -z"
       }
     ],
+    "consumers": {
+      "accepts": [
+        "ManagedEngine",
+        "ManagedService"
+      ]
+    },
     "consumer_params": [
       {
         "name": "action_type",
@@ -104,7 +106,7 @@
         }
       },
       {
-        "name": "titlt",
+        "name": "title",
         "mandatory": true,
         "immutable": true,
         "input": {
