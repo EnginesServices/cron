@@ -22,7 +22,7 @@
         "label": "cron"
       }
     },
-    "timestamp": "2017-12-28T17:07:51+11:00"
+    "timestamp": "2018-01-28T09:44:17+11:00"
   },
   "software": {
     "base": {
@@ -85,6 +85,7 @@
         "name": "action_type",
         "mandatory": true,
         "immutable": true,
+        "ask_at_build_time": true,
         "input": {
           "type": "select",
           "label": "Action Type",
@@ -109,6 +110,7 @@
         "name": "title",
         "mandatory": true,
         "immutable": true,
+        "ask_at_build_time": true,
         "input": {
           "type": "string",
           "label": "Title"
@@ -125,7 +127,7 @@
         }
       },
       {
-        "name": "notication_address",
+        "name": "notification_address",
         "value": "default",
         "input": {
           "type": "email",
