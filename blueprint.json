@@ -22,7 +22,7 @@
         "label": "cron"
       }
     },
-    "timestamp": "2018-01-28T09:44:17+11:00"
+    "timestamp": "2018-01-29T15:18:58+11:00"
   },
   "software": {
     "base": {
@@ -153,9 +153,9 @@
         "variables": [
           {
             "name": "notification_address",
-            "mandatory": true,
             "input": {
-              "type": "email"
+              "type": "email",
+              "label": "Default notification email address"
             }
           }
         ],
