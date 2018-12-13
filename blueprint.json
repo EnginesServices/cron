@@ -22,7 +22,7 @@
         "label": "cron"
       }
     },
-    "timestamp": "2018-02-01T14:34:10+11:00"
+    "timestamp": "2018-11-27T12:13:51+11:00"
   },
   "software": {
     "base": {
@@ -32,6 +32,8 @@
       "service_handle_field": "title",
       "parent_image": "engines/servicebase",
       "deployment_type": "worker",
+      "default_stop_timeout": 0,
+      "restart_attempts": 0,
       "memory": {
         "required": 92,
         "recommended": 96
@@ -133,8 +135,14 @@
         "name": "notification_address",
         "value": "default",
         "input": {
-          "type": "email",
-          "comment": "not present or 'default' for default, none for silent, log for log, email address for email "
+          "type": "select_with_input",
+          "comment": "not present or 'default' for default, none for silent, log for log, email address for email ",
+          "collection": {
+            "items": {
+              "none": "No notification",
+              "default": "System default"
+            }
+          }
         }
       }
     ],
