@@ -22,7 +22,7 @@
         "label": "cron"
       }
     },
-    "timestamp": "2018-11-27T12:13:51+11:00"
+    "timestamp": "2019-05-07T12:27:10+10:00"
   },
   "software": {
     "base": {
@@ -94,7 +94,8 @@
           "collection": {
             "items": {
               "command": "Run Command",
-              "web": "Get a URL"
+              "web": "Get a URL",
+              "action": "run an action"
             }
           }
         }
