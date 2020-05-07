@@ -22,7 +22,7 @@
         "label": "cron"
       }
     },
-    "timestamp": "2020-05-07T13:14:33+10:00"
+    "timestamp": "2020-05-07T13:16:13+10:00"
   },
   "software": {
     "base": {
@@ -83,7 +83,7 @@
         "destination": "/home/engines/scripts/engine",
         "owner": "root",
         "group": "containers",
-        "permissions": "550"
+        "permissions": "0550"
       }
     ],
     "template_files": [
@@ -93,7 +93,7 @@
         "content": "#!/bin/sh\r\n\r\ncat - | sendmail -f cron@$exter",
         "user": "root",
         "group": "containers",
-        "permissions": "550"
+        "permissions": "0550"
       }
     ],
     "consumers": {
