@@ -22,7 +22,7 @@
         "label": "cron"
       }
     },
-    "timestamp": "2020-05-12T12:14:31+10:00"
+    "timestamp": "2020-05-12T12:18:31+10:00"
   },
   "software": {
     "base": {
@@ -67,6 +67,9 @@
       },
       {
         "package": "make"
+      },
+      {
+        "package": "autoconf"
       }
     ],
     "included_files": [
