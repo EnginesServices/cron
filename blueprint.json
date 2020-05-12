@@ -22,7 +22,7 @@
         "label": "cron"
       }
     },
-    "timestamp": "2020-05-07T13:16:13+10:00"
+    "timestamp": "2020-05-12T10:32:30+10:00"
   },
   "software": {
     "base": {
@@ -49,13 +49,13 @@
     "scripts": {
       "start": {
         "language": "sh",
-        "content": "#!/bin/sh\r\n\r\n\r\nPID_FILE=/home/engines/run/fcron.pid\r\nexport PID_FILE\r\n. /home/engines/functions/trap.sh\r\n\r\n/home/cron/sbin/fcron -f -p  /home/cron/log/cron.log &\r\n\r\nstartup_complete\r\n\r\nwait \r\nexit_code=$?\r\n\r\nshutdown_complete"
+        "content": "#!/bin/sh\r\n\r\nPID_FILE=/home/engines/run/fcron.pid\r\nexport PID_FILE\r\n. /home/engines/functions/trap.sh\r\n\r\n/home/cron/sbin/fcron -f -p  /home/cron/log/cron.log &\r\n\r\nstartup_complete\r\n\r\nwait \r\nexit_code=$?\r\n\r\nshutdown_complete"
       },
       "install": {
         "language": "sh"
       },
       "post_install": {
-        "content": "#/bin/bash\r\ncd /tmp &&\\\r\n  \twget http://fcron.free.fr/archives/fcron-3.2.1.src.tar.gz &&\\\r\n  \ttar -xzpf fcron-3.2.1.src.tar.gz &&\\\r\n  \tcd fcron-3.2.1\r\n  \t./configure --with-run-non-privileged --with-rootname=cron\\\r\n\t--with-rootgroup=cron --with-username=cron --with-groupname=cron\\\r\n\t--with-piddir=/home/cron\\\r\n\t--with-fifodir=/home/cron --with-spooldir=/home/cron/spool\\\r\n\t--with-docdir=/home/cron/doc --prefix=/home/cron \r\n\tmake install \r\n\tmkdir -p /home/cron/doc /home/cron/man /home/cron/spool /home/cron/log/ \r\n\tchown -R cron /home/cron/ \r\n\tcd /home/cron \r\n\tchown root /home/cron/etc/fcron.conf \r\n\tchmod og-w /home/cron/etc/fcron.conf \r\n \t/home/post_build_clean.sh"
+        "content": "#/bin/sh\r\ncd /tmp &&\\\r\n  \twget http://fcron.free.fr/archives/fcron-3.2.1.src.tar.gz &&\\\r\n  \ttar -xzpf fcron-3.2.1.src.tar.gz &&\\\r\n  \tcd fcron-3.2.1\r\n  \t./configure --with-run-non-privileged --with-rootname=cron\\\r\n\t--with-rootgroup=cron --with-username=cron --with-groupname=cron\\\r\n\t--with-piddir=/home/cron\\\r\n\t--with-fifodir=/home/cron --with-spooldir=/home/cron/spool\\\r\n\t--with-docdir=/home/cron/doc --prefix=/home/cron \r\n\tmake install \r\n\tmkdir -p /home/cron/doc /home/cron/man /home/cron/spool /home/cron/log/ \r\n\tchown -R cron /home/cron/ \r\n\tcd /home/cron \r\n\tchown root /home/cron/etc/fcron.conf \r\n\tchmod og-w /home/cron/etc/fcron.conf \r\n \t/home/engines/scripts/build/post_build_clean.sh\r\n"
       }
     },
     "system_packages": [
@@ -79,7 +79,7 @@
     ],
     "included_files": [
       {
-        "source": "include/scripts/engine",
+        "source": "include/scripts/engine/rebuild_crontab.sh",
         "destination": "/home/engines/scripts/engine",
         "owner": "root",
         "group": "containers",
