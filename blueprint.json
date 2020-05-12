@@ -22,7 +22,7 @@
         "label": "cron"
       }
     },
-    "timestamp": "2020-05-12T12:18:31+10:00"
+    "timestamp": "2020-05-12T13:28:36+10:00"
   },
   "software": {
     "base": {
@@ -55,7 +55,7 @@
         "language": "sh"
       },
       "post_install": {
-        "content": "#/bin/sh\r\ncd /tmp \r\n    git clone https://github.com/yo8192/fcron \r\n  \tcd fcron\r\n  \tautoconf\r\n  \t./configure --with-run-non-privileged --with-rootname=cron\\\r\n\t--with-rootgroup=cron --with-username=cron --with-groupname=cron\\\r\n\t--with-piddir=/home/cron\\\r\n\t--with-fifodir=/home/cron --with-spooldir=/home/cron/spool\\\r\n\t--with-docdir=/home/cron/doc --prefix=/home/cron \r\n\tmake install \r\n\tmkdir -p /home/cron/doc /home/cron/man /home/cron/spool /home/cron/log/ \r\n\tchown -R cron /home/cron/ \r\n\tcd /home/cron \r\n\tchown root /home/cron/etc/fcron.conf \r\n\tchmod og-w /home/cron/etc/fcron.conf \r\n \t/home/engines/scripts/build/post_build_clean.sh\r\n"
+        "content": "#/bin/sh\r\ncd /tmp \r\n    git clone https://github.com/yo8192/fcron \r\n  \tcd fcron\r\n  \tautoconf\r\n  \tcat Makefile | sed \"s/\\$(MAKE) -C doc doc-if-none//\" >/tmp/mk\r\n  \tmv /tmp/mk Makefile\r\n  \t./configure --with-run-non-privileged --with-rootname=cron\\\r\n\t--with-rootgroup=cron --with-username=cron --with-groupname=cron\\\r\n\t--with-piddir=/home/cron\\\r\n\t--with-fifodir=/home/cron --with-spooldir=/home/cron/spool\\\r\n\t--with-docdir=/home/cron/doc --prefix=/home/cron \r\n\tmake install \r\n\tmkdir -p /home/cron/doc /home/cron/man /home/cron/spool /home/cron/log/ \r\n\tchown -R cron /home/cron/ \r\n\tcd /home/cron \r\n\tchown root /home/cron/etc/fcron.conf \r\n\tchmod og-w /home/cron/etc/fcron.conf \r\n \t/home/engines/scripts/build/post_build_clean.sh\r\n"
       }
     },
     "system_packages": [
