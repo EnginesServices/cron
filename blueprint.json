@@ -22,7 +22,7 @@
         "label": "cron"
       }
     },
-    "timestamp": "2020-05-12T10:40:18+10:00"
+    "timestamp": "2020-05-12T10:50:49+10:00"
   },
   "software": {
     "base": {
@@ -67,14 +67,6 @@
       },
       {
         "package": "make"
-      }
-    ],
-    "installed_packages": [
-      {
-        "name": "fcron-3.3.0.src.tar.gz",
-        "destination": "src",
-        "extraction_command": "tar -xzpf",
-        "path_to_extracted": "fcron"
       }
     ],
     "included_files": [
