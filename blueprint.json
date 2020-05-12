@@ -22,7 +22,7 @@
         "label": "cron"
       }
     },
-    "timestamp": "2020-05-12T18:14:11+10:00"
+    "timestamp": "2020-05-13T09:25:42+10:00"
   },
   "software": {
     "base": {
@@ -75,7 +75,7 @@
     "included_files": [
       {
         "source": "include/scripts/engine/rebuild_crontab.sh",
-        "destination": "/home/engines/scripts/engine",
+        "destination": "/home/engines/scripts/engine/",
         "owner": "root",
         "group": "containers",
         "permissions": "0550"
