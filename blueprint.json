@@ -22,7 +22,7 @@
         "label": "cron"
       }
     },
-    "timestamp": "2020-05-25T15:34:07+10:00"
+    "timestamp": "2020-05-25T15:37:31+10:00"
   },
   "software": {
     "base": {
@@ -55,7 +55,7 @@
         "language": "sh"
       },
       "install_sudo": {
-        "content": "FROM engines/frameworkbuild:current AS build_image\r\n    RUN cd /tmp &&\\\r\n   apt-get install -y sgmltools-lite sgmlspl lynx &&\\\r\n    groupadd -g 22016 cron &&\\\r\n    useradd -u 22016  -g cron -d /home/cron cron &&\\\r\n    git clone https://github.com/yo8192/fcron  &&\\\r\n    mkdir -p /home/cron/doc /home/cron/man /home/cron/spool /home/cron/log/ &&\\\r\n  \tcd fcron &&\\\r\n  \tautoconf &&\\\r\n  \t./configure --with-run-non-privileged --with-rootname=cron\\ \\\r\n\t--with-rootgroup=cron --with-username=cron --with-groupname=cron\\ \\\r\n\t--with-piddir=/home/cron\\ \\\r\n\t--with-fifodir=/home/cron --with-spooldir=/home/cron/spool\\ \\\r\n\t--prefix=/home/cron  &&\\\r\n\tmake fcron fcrontab fcrondyn convert-fcrontab files/fcron.conf &&\\\r\n\tmake install-staged\r\n\t\r\n"
+        "content": "FROM engines/frameworkbuild:current AS build_image\r\n    RUN cd /tmp &&\\\r\n   apt-get install -y sgmltools-lite sgmlspl docbook-utils lynx &&\\\r\n    groupadd -g 22016 cron &&\\\r\n    useradd -u 22016  -g cron -d /home/cron cron &&\\\r\n    git clone https://github.com/yo8192/fcron  &&\\\r\n    mkdir -p /home/cron/doc /home/cron/man /home/cron/spool /home/cron/log/ &&\\\r\n  \tcd fcron &&\\\r\n  \tautoconf &&\\\r\n  \t./configure --with-run-non-privileged --with-rootname=cron\\ \\\r\n\t--with-rootgroup=cron --with-username=cron --with-groupname=cron\\ \\\r\n\t--with-piddir=/home/cron\\ \\\r\n\t--with-fifodir=/home/cron --with-spooldir=/home/cron/spool\\ \\\r\n\t--prefix=/home/cron  &&\\\r\n\tmake fcron fcrontab fcrondyn convert-fcrontab files/fcron.conf &&\\\r\n\tmake install-staged\r\n\t\r\n"
       },
       "post_install_sudo": {
         "content": "copy --from=build_image --chown=cron:cron /home/cron /home/cron"
