@@ -22,7 +22,7 @@
         "label": "cron"
       }
     },
-    "timestamp": "2020-05-25T15:37:31+10:00"
+    "timestamp": "2020-05-25T17:42:02+10:00"
   },
   "software": {
     "base": {
@@ -223,7 +223,7 @@
     "file_permissions": [
       {
         "path": "/home/cron",
-        "recursive": true,
+        "recursive": false,
         "user": "cron",
         "group": "cron",
         "permissions": "u+w",
