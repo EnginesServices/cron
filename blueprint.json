@@ -22,7 +22,7 @@
         "label": "cron"
       }
     },
-    "timestamp": "2020-05-13T10:27:21+10:00"
+    "timestamp": "2020-05-25T14:02:08+10:00"
   },
   "software": {
     "base": {
@@ -54,8 +54,14 @@
       "install": {
         "language": "sh"
       },
+      "install_sudo": {
+        "content": "FROM engines/frameworkbuild:current AS build_image\r\n    RUN cd /tmp &&\\\r\n    git clone https://github.com/yo8192/fcron  &&\\\r\n    mkdir -p /home/cron/doc /home/cron/man /home/cron/spool /home/cron/log/ &&\\\r\n  \tcd fcron &&\\22016\r\n  \tautoconf &&\\\r\n  \t./configure --with-run-non-privileged --with-rootname=cron\\ &&\\\r\n\t--with-rootgroup=cron --with-username=cron --with-groupname=cron\\ &&\\\r\n\t--with-piddir=/home/cron\\ &&\\\r\n\t--with-fifodir=/home/cron --with-spooldir=/home/cron/spool\\ &&\\\r\n\t--with-docdir=/home/cron/doc --prefix=/home/cron  &&\\\r\n\tcat Makefile | sed \"s/.* -C doc doc-if-none//\" | sed \"s/make -C doc/make -C /\" >/tmp/mk &&\\\r\n    cp /tmp/mk  /tmp/fcron/Makefile &&\\\r\n\tmake fcron fcrontab fcrondyn convert-fcrontab files/fcron.conf &&\\\r\n\tmake install-staged &&\\\r\n\t\r\n"
+      },
       "post_install": {
-        "content": "#/bin/sh\r\ncd /tmp \r\n    git clone https://github.com/yo8192/fcron \r\n  \tcd fcron\r\n  \tautoconf\r\n  \t./configure --with-run-non-privileged --with-rootname=cron\\\r\n\t--with-rootgroup=cron --with-username=cron --with-groupname=cron\\\r\n\t--with-piddir=/home/cron\\\r\n\t--with-fifodir=/home/cron --with-spooldir=/home/cron/spool\\\r\n\t--with-docdir=/home/cron/doc --prefix=/home/cron \r\n\tcat Makefile | sed \"s/.* -C doc doc-if-none//\" | sed \"s/make -C doc/make -C /\" >/tmp/mk\r\n    cp /tmp/mk  /tmp/fcron/Makefile\r\n\r\n\tmake fcron fcrontab fcrondyn convert-fcrontab files/fcron.conf\r\n\tmake install-staged\r\n\tmkdir -p /home/cron/doc /home/cron/man /home/cron/spool /home/cron/log/ \r\n\tchown -R cron /home/cron/ \r\n \t/home/engines/scripts/build/post_build_clean.sh\r\n"
+        "content": "\r\ncd /tmp \r\n    git clone https://github.com/yo8192/fcron \r\n  \tcd fcron\r\n  \tautoconf\r\n  \tmkdir -p /home/cron/doc /home/cron/man /home/cron/spool /home/cron/log/ \r\n\tchown -R cron /home/cron/ \r\n  \t./configure --with-run-non-privileged --with-rootname=cron\\\r\n\t--with-rootgroup=cron --with-username=cron --with-groupname=cron\\\r\n\t--with-piddir=/home/cron\\\r\n\t--with-fifodir=/home/cron --with-spooldir=/home/cron/spool\\\r\n\t--with-docdir=/home/cron/doc --prefix=/home/cron \r\n\tcat Makefile | sed \"s/.* -C doc doc-if-none//\" | sed \"s/make -C doc/make -C /\" >/tmp/mk\r\n    cp /tmp/mk  /tmp/fcron/Makefile\r\n\tmake fcron fcrontab fcrondyn convert-fcrontab files/fcron.conf\r\n\tmake install-staged\r\n \t/home/engines/scripts/build/post_build_clean.sh\r\n"
+      },
+      "post_install_sudo": {
+        "content": "copy --from=build_image --chown=cron:cron /home/cron /home/cron"
       }
     },
     "system_packages": [
@@ -215,6 +221,16 @@
           "language": "sh",
           "content": "#!/bin/sh\r\nif test -f /home/engines/scripts/configurators/saved/default_notifcation_address\r\n then\r\n  addr=`cat /home/engines/scripts/configurators/saved/default_notifcation_address`\r\nelse\r\n addr=Not Set\r\nfi\r\n\r\necho '{\"notification_address\":\"'$addr'\"}'\r\n\r\nexit 0\r\n"
         }
+      }
+    ],
+    "file_permissions": [
+      {
+        "path": "/home/cron",
+        "recursive": true,
+        "user": "cron",
+        "group": "cron",
+        "permissions": "u+w",
+        "create": "dir"
       }
     ]
   }
