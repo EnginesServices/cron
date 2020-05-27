@@ -24,9 +24,9 @@
         "default_stop_timeout": 0,
         "restart_attempts": 0
       },
-      "disposition": {
-        "start_syslog": true
-      },
+      "disposition": [
+        "start_syslog"
+      ],
       "system_packages": [
         {
           "name": "build-essential"
