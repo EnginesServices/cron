@@ -1,234 +1,55 @@
 {
-  "schema": {
-    "type": "service_blueprint",
-    "version": {
-      "major": 0,
-      "minor": 1
-    },
-    "origin": "Engines Developer Studio 0.2"
+  "title": "mysql server",
+  "description": "mysql",
+  "memory_usage": {
+    "required": 92,
+    "recommended": 96
   },
-  "metadata": {
-    "blueprint": {
-      "version": {
-        "major": 0,
-        "minor": 0,
-        "level": "alpha",
-        "patch": 0
-      }
-    },
-    "software": {
-      "display": {
-        "title": "cron",
-        "label": "cron"
-      }
-    },
-    "timestamp": "2020-05-26T11:28:15+10:00"
-  },
-  "software": {
-    "base": {
-      "name": "cron",
-      "publisher_namespace": "EnginesSystem",
-      "type_path": "cron",
-      "service_handle_field": "title",
-      "parent_image": "engines/servicebase",
-      "deployment_type": "worker",
-      "default_stop_timeout": 0,
-      "restart_attempts": 0,
-      "memory": {
-        "required": 92,
-        "recommended": 96
+  "licenses": [
+  ],
+  "consumers": [
+    "ManagedEngine",
+    "ManagedService"
+  ],
+  "stages": [
+    {
+      "starter": {
+        "image": "engines/servicebase",
+        "tag": "current"
       },
-      "run_as_user": "cron",
-      "user_id": "22016",
-      "user_primary_group": "cron",
-      "create_user": "1"
-    },
-    "disposition": {
-      "start_syslog": true
-    },
-    "scripts": {
-      "start": {
-        "language": "sh",
-        "content": "#!/bin/sh\r\n\r\nPID_FILE=/home/engines/run/fcron.pid\r\nexport PID_FILE\r\n. /home/engines/functions/trap.sh\r\n\r\n/home/cron/sbin/fcron -f -p  /home/cron/log/cron.log &\r\n\r\nstartup_complete\r\n\r\nwait \r\nexit_code=$?\r\n\r\nshutdown_complete"
+      "state": {
+        "type_path": "cron",
+        "service_handle_field": "title",
+        "deployment_type": "worker",
+        "default_stop_timeout": 0,
+        "restart_attempts": 0
       },
-      "install": {
-        "language": "sh"
+      "disposition": {
+        "start_syslog": true
       },
-      "install_sudo": {
-        "content": "FROM engines/frameworkbuild:current AS build_image\r\n    RUN cd /tmp &&\\\r\n   apt-get install -y sgmltools-lite sgmlspl docbook-utils lynx &&\\\r\n    groupadd -g 22016 cron &&\\\r\n    useradd -u 22016  -g cron -d /home/cron cron &&\\\r\n    git clone https://github.com/yo8192/fcron  &&\\\r\n    mkdir -p /home/cron/doc /home/cron/man /home/cron/spool /home/cron/log/ &&\\\r\n  \tcd fcron &&\\\r\n  \tautoconf &&\\\r\n  \t./configure --with-run-non-privileged --with-rootname=cron \\\r\n\t--with-rootgroup=cron --with-username=cron --with-groupname=cron \\\r\n\t--with-piddir=/home/cron \\\r\n\t--with-fifodir=/home/cron --with-spooldir=/home/cron/spool \\\r\n\t--prefix=/home/cron  &&\\\r\n  \ttouch script/fcron.init.systemd.reboot &&\\\r\n\tmake fcron fcrontab fcrondyn convert-fcrontab files/fcron.conf &&\\\r\n\tmake install\r\n\t\r\n"
-      },
-      "post_install_sudo": {
-        "content": "copy --from=build_image --chown=cron:cron /home/cron /home/cron"
-      }
-    },
-    "system_packages": [
-      {
-        "package": "build-essential"
-      },
-      {
-        "package": "gcc"
-      },
-      {
-        "package": "make"
-      },
-      {
-        "package": "autoconf"
-      }
-    ],
-    "included_files": [
-      {
-        "source": "include/scripts/engine/rebuild_crontab.sh",
-        "destination": "/home/engines/scripts/engine/rebuild_crontab.sh",
-        "owner": "root",
-        "group": "containers",
-        "permissions": "0550"
-      }
-    ],
-    "template_files": [
-      {
-        "path": "/home/engines/scripts/engine/sendmail",
-        "language": "sh",
-        "content": "#!/bin/sh\r\n\r\ncat - | sendmail -f cron@$exter",
-        "user": "root",
-        "group": "containers",
-        "permissions": "0550"
-      },
-      {
-        "path": "/home/cron/etc/fcron.conf",
-        "content": "# fcron.conf - Configuration file for fcron(8) and fcrontab(1).\r\n# See fcron.conf(5) for syntax and explanations.\r\n#\r\n# WARNING : this file must be owned by cron:cron and 640.\r\n#\r\n\r\n# The spool directory where fcron stores its files\r\nfcrontabs       =      /home/cron/spool\r\n\r\n# The locations of the pid file, suspend file and the fifo file\r\npidfile         =      /home/engines/run/fcron.pid\r\nsuspendfile     =      /home/engines/run/fcron.suspend\r\nfifofile        =      /home/cron/fcron.fifo\r\n\r\n# allow/deny files to determine which users are allowed to use fcrontab\r\nfcronallow      =      /home/cron/etc/fcron.allow\r\nfcrondeny       =      /home/cron/etc/fcron.deny\r\n\r\n# Location of the programs used by fcron\r\nshell           =      /bin/sh\r\nsendmail        =      /usr/sbin/sendmail\r\n\r\n# Location of the default editor for \"fcrontab -e\"\r\neditor          =      /usr/bin/vi",
-        "user": "root",
-        "group": "cron",
-        "permissions": "220"
-      }
-    ],
-    "consumers": {
-      "accepts": [
-        "ManagedEngine",
-        "ManagedService"
+      "system_packages": [
+        {
+          "name": "build-essential"
+        },
+        {
+          "name": "gcc"
+        },
+        {
+          "name": "make"
+        },
+        {
+          "name": "autoconf"
+        }
+      ],
+      "file_permissions": [
+        {
+          "path": "/home/cron",
+          "recursive": false,
+          "permissions": "u+w",
+          "create": "dir"
+        }
       ]
     },
-    "consumer_scripts": {
-      "add": {
-        "language": "sh",
-        "content": "#!/bin/sh\r\n\r\n\r\n . /home/engines/functions/checks.sh\r\nrequired_values=\"cron_job when title parent_engine container_type\"\r\ncheck_required_values\r\n\r\n\r\nmkdir -p /home/cron/entries/${parent_engine}/$title\r\n\r\nif test  ${container_type} = app\r\n then\r\n \tcontainer_type=engine\r\nfi\r\n\r\necho -n $container_type > /home/cron/entries/${parent_engine}/$title/container_type\r\necho -n $action_type > /home/cron/entries/${parent_engine}/$title/action_type\r\necho -n $notification_address > /home/cron/entries/${parent_engine}/$title/notification_address\r\necho -n \"$when\" > /home/cron/entries/${parent_engine}/$title/when\r\n\r\nif test $action_type = \"web\"\r\n then\r\n    cmd=\"curl http://${parent_engine}.engines.internal:8000$cron_job\"\r\nelif test $action_type = \"command\"\r\n then\r\n \tcmd=\"curl -k https://172.17.0.1:2380/v0/cron/engine/${parent_engine}/$title/run\"\r\nelif test $action_type = \"schedule\"\r\n then\r\n    cmd=\"curl -k  https://172.17.0.1:2380/v0/schedule/${container_type}/${parent_engine}/$cron_job\"\r\nelif test $action_type = \"action\"\r\n then\r\n    cmd=\"curl -k https://172.17.0.1:2380/v0/schedule/${container_type}/${parent_engine}/$title/run\"\r\nfi\r\n\r\necho -n \"$cmd \" > /home/cron/entries/${parent_engine}/$title/cmd\r\necho -n \"$title\" > /home/cron/entries/${parent_engine}/$title/title\r\n\r\n/home/engines/scripts/engine/rebuild_crontab.sh\r\n\r\necho \"Success\"\r\nexit 0\r\n"
-      },
-      "update": {
-        "language": "sh",
-        "content": "#!/bin/sh\r\n\r\n#. /home/engines/functions/params_to_env.sh\r\n#params_to_env\r\n . /home/engines/functions/checks.sh\r\n required_values=\"cron_job when title parent_engine container_type\"\r\ncheck_required_values\r\n\r\nif test  ${container_type} = app\r\n then\r\n \tcontainer_type=engine\r\nfi\r\n\r\nrm  /home/cron/entries/${parent_engine}/$title\r\n\r\nif test $action_type = \"web\"\r\nthen\r\n\tcmd=\"curl http://${parent_engine}.engines.internal:8000$cron_job  -o /tmp/out\"\r\nelif test $action_type = \"command\"\r\n then\r\n   cmd=\"curl -k https://172.17.0.1:2380/v0/cron/engine/${parent_engine}/$title/run\"\r\nelif test $action_type = \"schedule\"\r\n then\r\n   cmd=\"curl -k https://172.17.0.1:2380/v0/schedule/${container_type}/${parent_engine}/${cron_job}\"\r\nelif test $action_type = \"action\"\r\n then\r\n   cmd=\"curl -k https://172.17.0.1:2380/v0/schedule/${container_type}/${parent_engine}/$title/run\"\r\nfi\r\n\r\necho \"$when $cmd \" > /home/cron/entries/${parent_engine}/${title}\r\n\r\n/home/engines/scripts/engine/rebuild_crontab.sh\r\n\r\necho \"Success\"\r\nexit 0\r\n"
-      },
-      "remove": {
-        "language": "sh",
-        "content": "#!/bin/sh\r\n\r\n#. /home/engines/functions/params_to_env.sh\r\n#params_to_env\r\n . /home/engines/functions/checks.sh\r\nrequired_values=\"title parent_engine \"\r\ncheck_required_values\r\n\r\n\r\nif test -f /home/cron/entries/${parent_engine}/$title\r\n then\r\n\trm /home/cron/entries/${parent_engine}/$title\r\n\t/home/engines/scripts/engine/rebuild_crontab.sh\r\nfi\r\n\r\necho \"Success\"\r\nexit 0\r\n"
-      }
-    },
-    "consumer_params": [
-      {
-        "name": "action_type",
-        "mandatory": true,
-        "immutable": true,
-        "ask_at_build_time": true,
-        "input": {
-          "type": "select",
-          "label": "Action Type",
-          "collection": {
-            "items": {
-              "command": "Run Command",
-              "web": "Get a URL",
-              "action": "run an action"
-            }
-          }
-        }
-      },
-      {
-        "name": "cron_job",
-        "mandatory": true,
-        "input": {
-          "type": "string",
-          "label": "Cron Job",
-          "hint": "The command or URL"
-        }
-      },
-      {
-        "name": "title",
-        "mandatory": true,
-        "immutable": true,
-        "ask_at_build_time": true,
-        "input": {
-          "type": "string",
-          "label": "Title",
-          "validation": {
-            "pattern": "[a-zA-Z0-9]*"
-          }
-        }
-      },
-      {
-        "name": "when",
-        "mandatory": true,
-        "input": {
-          "type": "string",
-          "title": "Cron when specification",
-          "comment": "(minute) {hr} {day  of month} {month} {day of week}",
-          "hint": "*/15 * * * *"
-        }
-      },
-      {
-        "name": "notification_address",
-        "value": "default",
-        "input": {
-          "type": "select_with_input",
-          "comment": "not present or 'default' for default, none for silent, log for log, email address for email ",
-          "collection": {
-            "items": {
-              "none": "No notification",
-              "default": "System default"
-            }
-          }
-        }
-      }
-    ],
-    "actionators": [
-      {
-        "name": "show_crontab",
-        "label": "Show crontab",
-        "return_type": "json",
-        "script": {
-          "content": "#!/bin/sh\r\ncron_list_file=`mktemp`\r\n /home/cron/bin/fcrontab -l | sed \"/*/s//STAR/g\"  > $cron_list_file\r\nfirst=1\r\necho '{\"cron_jobs\":['\r\ncat $cron_list_file | while read LINE\r\ndo\r\nif test $first -eq 1\r\n then\r\n  first=0\r\nelse\r\n echo -n \",\"\r\nfi\r\ncront=`echo \"$LINE\" | cut -f1-5 -d\" \"`\r\ncronl=`echo \"$LINE\" | cut -f6- -d\" \"`\r\ntim=`echo $cront | sed \"/STAR/s//*/g\"`\r\necho '{\"command\":\"'$cronl'\",\r\n\t\t\"when\":\"'\"$tim\"'\"}'\r\n\r\ndone\r\necho ']}'\r\n\r\n\r\nrm $cron_list_file"
-        }
-      }
-    ],
-    "configurators": [
-      {
-        "name": "default_notifcation_address",
-        "label": "Default notificaton address",
-        "enable_logging": true,
-        "variables": [
-          {
-            "name": "notification_address",
-            "input": {
-              "type": "email",
-              "label": "Default notification email address"
-            }
-          }
-        ],
-        "set_script": {
-          "language": "sh",
-          "content": "#!/bin/sh\r\n\r\nset >/tmp/env\r\necho -n $notification_address > /home/engines/scripts/configurators/saved/default_notifcation_address\r\n\r\nexit 0\r\n"
-        },
-        "read_script": {
-          "language": "sh",
-          "content": "#!/bin/sh\r\nif test -f /home/engines/scripts/configurators/saved/default_notifcation_address\r\n then\r\n  addr=`cat /home/engines/scripts/configurators/saved/default_notifcation_address`\r\nelse\r\n addr=Not Set\r\nfi\r\n\r\necho '{\"notification_address\":\"'$addr'\"}'\r\n\r\nexit 0\r\n"
-        }
-      }
-    ],
-    "file_permissions": [
-      {
-        "path": "/home/cron",
-        "recursive": false,
-        "user": "cron",
-        "group": "cron",
-        "permissions": "u+w",
-        "create": "dir"
-      }
-    ]
+  ]
   }
 }
