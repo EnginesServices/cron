@@ -1,6 +1,6 @@
 {
-  "title": "mysql server",
-  "description": "mysql",
+  "title": "cron",
+  "description": "cron",
   "memory_usage": {
     "required": 92,
     "recommended": 96
@@ -13,17 +13,7 @@
         "image": "engines/servicebase",
         "tag": "current"
       },
-      "state": {
-        "type_path": "cron",
-        "service_handle_field": "title",
-        "deployment_type": "worker",
-        "default_stop_timeout": 0,
-        "restart_attempts": 0
-      },
-      "disposition": [
-        "start_syslog"
-      ],
-      "system_packages": [
+      "os_packages": [
         {
           "name": "build-essential"
         },
@@ -36,16 +26,8 @@
         {
           "name": "autoconf"
         }
-      ],
-      "file_permissions": [
-        {
-          "path": "/home/cron",
-          "recursive": false,
-          "permissions": "u+w",
-          "create": "dir"
-        }
       ]
-    },
+    }
   ]
   }
 }
