@@ -1,12 +1,15 @@
 {
   "title": "cron",
   "description": "cron",
-  "memory_usage": {
-    "required": 92,
-    "recommended": 96
-  },
+  "memory_usage": 96,
   "licenses": [
   ],
+  "user": {
+    "identifier": "22016",
+    "name": "cron",
+    "group": "cron",
+    "create": true
+  },
   "stages": [
     {
       "starter": {
