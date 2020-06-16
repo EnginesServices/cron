@@ -7,7 +7,6 @@
   "user": {
     "identifier": "22016",
     "name": "cron",
-    "group": "cron",
     "create": true
   },
   "stages": [
